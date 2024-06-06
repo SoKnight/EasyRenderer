@@ -6,6 +6,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.Files;
@@ -18,10 +19,22 @@ import static org.lwjgl.stb.STBImage.*;
 
 public final class TextureLoader {
 
-    public static Texture loadFrom(Path path) throws TextureLoadException, IOException {
-        long size = Files.size(path);
-        try (InputStream stream = Files.newInputStream(path)) {
-            return loadFrom(stream, Math.toIntExact(size));
+    public static Texture loadFrom(URL url) throws TextureLoadException {
+        try (InputStream stream = url.openStream()) {
+            return loadFrom(stream, stream.available());
+        } catch (IOException ex) {
+            throw new TextureLoadException(ex);
+        }
+    }
+
+    public static Texture loadFrom(Path path) throws TextureLoadException {
+        try {
+            long size = Files.size(path);
+            try (InputStream stream = Files.newInputStream(path)) {
+                return loadFrom(stream, Math.toIntExact(size));
+            }
+        } catch (IOException ex) {
+            throw new TextureLoadException(ex);
         }
     }
 

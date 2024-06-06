@@ -1,4 +1,4 @@
-package org.easylauncher.renderer.engine.type;
+package org.easylauncher.renderer.state;
 
 public interface Initializable {
 

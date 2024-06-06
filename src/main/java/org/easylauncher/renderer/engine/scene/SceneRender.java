@@ -12,8 +12,8 @@ import org.easylauncher.renderer.engine.graph.texture.Texture;
 import org.easylauncher.renderer.engine.light.AmbientLight;
 import org.easylauncher.renderer.engine.light.DirectedLight;
 import org.easylauncher.renderer.engine.shader.ShaderProgram;
-import org.easylauncher.renderer.engine.type.Cleanable;
-import org.easylauncher.renderer.engine.type.MaterialDesiring;
+import org.easylauncher.renderer.state.Cleanable;
+import org.easylauncher.renderer.state.MaterialDesiring;
 
 import java.util.Collection;
 import java.util.List;
@@ -89,6 +89,7 @@ public final class SceneRender implements Cleanable {
 
         glBindVertexArray(0);
         shaderProgram.unbind();
+        System.out.println("Render done!");
     }
 
     private static void updateLights(Scene scene, Uniforms uniforms) throws ShaderGLException {

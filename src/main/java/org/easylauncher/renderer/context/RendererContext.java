@@ -8,8 +8,8 @@ import org.easylauncher.renderer.engine.exception.shader.ShaderGLException;
 import org.easylauncher.renderer.engine.exception.shader.ShaderLoadException;
 import org.easylauncher.renderer.engine.scene.Scene;
 import org.easylauncher.renderer.engine.scene.SceneLights;
-import org.easylauncher.renderer.engine.type.Cleanable;
-import org.easylauncher.renderer.engine.type.Initializable;
+import org.easylauncher.renderer.state.Cleanable;
+import org.easylauncher.renderer.state.Initializable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,7 +35,6 @@ public final class RendererContext implements Cleanable, Initializable {
 
     private int width, height;
     private float rotationX, rotationY;
-    private ViewDesire viewDesire;
     private boolean available;
 
     public RendererContext(Engine engine, Render render, ViewDesire viewDesire) {
@@ -50,7 +49,6 @@ public final class RendererContext implements Cleanable, Initializable {
 
         this.width = width;
         this.height = height;
-        this.viewDesire = viewDesire;
 
         rotateSceneTo(21F, viewDesire.getSceneAngleY());
     }
@@ -95,17 +93,13 @@ public final class RendererContext implements Cleanable, Initializable {
         scene.updateRotationMatrix();
     }
 
-    public void desireView(ViewDesire viewDesire) {
-        if (this.viewDesire != viewDesire) {
-            this.viewDesire = viewDesire;
-            scene.getRotationY().setAngleDeg(viewDesire.getSceneAngleY());
-            scene.updateRotationMatrix();
-        }
-    }
-
     public void unload() {
         this.available = false;
         engine.unloadContext(this);
+    }
+
+    public RenderOptions getRenderOptions() {
+        return render.getOptions();
     }
 
 }

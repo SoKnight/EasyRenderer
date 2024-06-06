@@ -3,7 +3,7 @@ package org.easylauncher.renderer.engine.graph;
 import lombok.Getter;
 import org.easylauncher.renderer.context.RenderOptions;
 import org.easylauncher.renderer.engine.graph.mesh.Mesh;
-import org.easylauncher.renderer.engine.type.Cleanable;
+import org.easylauncher.renderer.state.Cleanable;
 
 import java.util.ArrayList;
 import java.util.List;

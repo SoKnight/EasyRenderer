@@ -1,9 +1,9 @@
 package org.easylauncher.renderer.engine.shader;
 
-import org.easylauncher.renderer.engine.type.Bindable;
-import org.easylauncher.renderer.engine.type.Cleanable;
+import org.easylauncher.renderer.state.Bindable;
+import org.easylauncher.renderer.state.Cleanable;
 import org.easylauncher.renderer.engine.Uniforms;
-import org.easylauncher.renderer.engine.type.Validatable;
+import org.easylauncher.renderer.state.Validatable;
 import org.easylauncher.renderer.engine.exception.shader.ShaderGLException;
 import org.easylauncher.renderer.engine.exception.shader.ShaderLoadException;
 

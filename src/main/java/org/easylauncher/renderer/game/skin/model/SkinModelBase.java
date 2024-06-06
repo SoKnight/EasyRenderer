@@ -7,7 +7,7 @@ import org.easylauncher.renderer.engine.graph.Material;
 import org.easylauncher.renderer.engine.graph.Model;
 import org.easylauncher.renderer.engine.graph.mesh.Mesh;
 import org.easylauncher.renderer.engine.scene.Scene;
-import org.easylauncher.renderer.engine.type.MaterialDesiring;
+import org.easylauncher.renderer.state.MaterialDesiring;
 
 @Getter
 public abstract class SkinModelBase extends Model implements MaterialDesiring {
