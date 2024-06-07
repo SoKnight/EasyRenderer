@@ -1,7 +1,6 @@
 package org.easylauncher.renderer;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -9,17 +8,14 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import org.easylauncher.renderer.context.RenderOptions;
 import org.easylauncher.renderer.context.ViewDesire;
-import org.easylauncher.renderer.engine.exception.texture.TextureLoadException;
-import org.easylauncher.renderer.javafx.RendererPaneBase;
+import org.easylauncher.renderer.engine.graph.texture.source.TextureSource;
+import org.easylauncher.renderer.javafx.RendererPane;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-
-import static org.easylauncher.renderer.engine.graph.texture.TextureLoader.loadFrom;
+import java.util.UUID;
 
 public final class EasyRendererDemo extends Application {
 
@@ -29,12 +25,12 @@ public final class EasyRendererDemo extends Application {
     public EasyRendererDemo() {
         this.examplesDir = Paths.get("examples");
         this.capePath = examplesDir.resolve("capes").resolve("15year.png");
-        this.skinPath = examplesDir.resolve("defaults").resolve("soknight.png");
+        this.skinPath = examplesDir.resolve("skins").resolve("soknight.png");
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        List<RendererPaneBase> rendererPanes = new ArrayList<>();
+        List<RendererPane> rendererPanes = new ArrayList<>();
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(12);
@@ -44,45 +40,36 @@ public final class EasyRendererDemo extends Application {
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 3; j++) {
-                RendererPaneBase rendererPane = new RendererPaneBase();
+                RendererPane rendererPane = new RendererPane();
                 GridPane.setHgrow(rendererPane, Priority.ALWAYS);
                 GridPane.setVgrow(rendererPane, Priority.ALWAYS);
                 gridPane.add(rendererPane, i, j);
+
+                rendererPane.setPlayerCape(TextureSource.fromFile(capePath));
+//                rendererPane.setPlayerSkin(TextureSource.fromFile(skinPath));
+                rendererPane.setPlayerUUID(UUID.randomUUID());
+
                 rendererPanes.add(rendererPane);
             }
         }
 
         RenderOptions renderOptions = new RenderOptions();
 
-        Consumer<RendererPaneBase> sceneSetupFunction = pane -> {
-            pane.loadDefaultSceneComposition(renderOptions);
-            refreshPaneContent(pane);
-        };
-
         Scene scene = new Scene(gridPane, 900D, 750D);
         stage.setScene(scene);
         stage.setTitle("EasyRenderer / JavaFX 21");
-        stage.setOnCloseRequest(event -> {
-            for (RendererPaneBase rendererPane : rendererPanes) {
-                rendererPane.getCanvas().dispose();
-            }
-        });
+        stage.setOnCloseRequest(event -> RendererPane.cleanupAll());
         stage.show();
 
         for (int i = 0; i < rendererPanes.size(); i++) {
-            RendererPaneBase rendererPane = rendererPanes.get(i);
+            RendererPane rendererPane = rendererPanes.get(i);
             ViewDesire viewDesire = i % 2 == 0 ? ViewDesire.SKIN : ViewDesire.CAPE;
-            Platform.runLater(() -> rendererPane.postInitialize(renderOptions, viewDesire, sceneSetupFunction, Throwable::printStackTrace));
-        }
-    }
 
-    private void refreshPaneContent(RendererPaneBase pane) {
-        try {
-            pane.updateCapeTexture(loadFrom(capePath));
-            pane.updateSkinTexture(loadFrom(skinPath));
-            pane.getCanvas().repaint();
-        } catch (TextureLoadException | IOException ex) {
-            throw new RuntimeException(ex);
+            rendererPane.initialize(renderOptions, customizer -> customizer
+                    .desireView(viewDesire)
+                    .makeInteractive());
+
+            rendererPane.bind();
         }
     }
 

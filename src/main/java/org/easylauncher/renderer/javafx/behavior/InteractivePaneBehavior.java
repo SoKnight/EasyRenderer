@@ -35,7 +35,7 @@ public final class InteractivePaneBehavior implements RendererPaneBehavior {
 
                 if (dx != 0D || dy != 0D) {
                     rendererContext.rotateSceneBy((float) dy * mouseSensitivity, (float) dx * mouseSensitivity);
-                    rendererPane.updateGraphics();
+                    rendererPane.requestRender();
                 }
             }
 

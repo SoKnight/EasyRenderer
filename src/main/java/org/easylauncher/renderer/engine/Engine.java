@@ -37,7 +37,6 @@ public final class Engine {
         if (!contexts.contains(context))
             return;
 
-        context.cleanup();
         contexts.remove(context);
     }
 

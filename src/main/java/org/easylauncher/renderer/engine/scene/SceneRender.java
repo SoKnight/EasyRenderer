@@ -89,7 +89,6 @@ public final class SceneRender implements Cleanable {
 
         glBindVertexArray(0);
         shaderProgram.unbind();
-        System.out.println("Render done!");
     }
 
     private static void updateLights(Scene scene, Uniforms uniforms) throws ShaderGLException {

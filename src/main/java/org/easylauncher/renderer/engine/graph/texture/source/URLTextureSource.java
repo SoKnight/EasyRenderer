@@ -6,15 +6,13 @@ import org.easylauncher.renderer.engine.graph.texture.Texture;
 import org.easylauncher.renderer.engine.graph.texture.TextureLoader;
 
 import java.net.URL;
-import java.util.function.Consumer;
 
 @Getter
 public final class URLTextureSource extends TextureSourceBase {
 
     private final URL url;
 
-    URLTextureSource(URL url, Consumer<TextureLoadException> failureHandler) {
-        super(failureHandler);
+    URLTextureSource(URL url) {
         this.url = url;
     }
 

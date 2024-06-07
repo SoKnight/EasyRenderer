@@ -1,8 +1,8 @@
 package org.easylauncher.renderer.game.skin.resolver;
 
 import org.easylauncher.renderer.engine.exception.texture.TextureLoadException;
-import org.easylauncher.renderer.engine.graph.texture.Texture;
 import org.easylauncher.renderer.engine.scene.Scene;
+import org.easylauncher.renderer.game.skin.SkinTextureWrapper;
 
 import java.util.UUID;
 
@@ -15,6 +15,6 @@ public interface DefaultSkinResolver {
             ? scene.getSteveSkinTexture()
             : scene.getAlexSkinTexture();
 
-    Texture resolveSkinTexture(Scene scene, UUID playerUUID) throws TextureLoadException;
+    SkinTextureWrapper resolveSkinTexture(Scene scene, UUID playerUUID) throws TextureLoadException;
 
 }

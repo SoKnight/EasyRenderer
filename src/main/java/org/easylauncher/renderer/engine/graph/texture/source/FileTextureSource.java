@@ -6,15 +6,13 @@ import org.easylauncher.renderer.engine.graph.texture.Texture;
 import org.easylauncher.renderer.engine.graph.texture.TextureLoader;
 
 import java.nio.file.Path;
-import java.util.function.Consumer;
 
 @Getter
 public final class FileTextureSource extends TextureSourceBase {
 
     private final Path filePath;
 
-    FileTextureSource(Path filePath, Consumer<TextureLoadException> failureHandler) {
-        super(failureHandler);
+    FileTextureSource(Path filePath) {
         this.filePath = filePath;
     }
 

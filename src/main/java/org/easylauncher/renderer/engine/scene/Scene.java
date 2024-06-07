@@ -11,6 +11,7 @@ import org.easylauncher.renderer.engine.graph.Model;
 import org.easylauncher.renderer.engine.graph.Rotation;
 import org.easylauncher.renderer.engine.graph.texture.Texture;
 import org.easylauncher.renderer.engine.graph.texture.TextureLoader;
+import org.easylauncher.renderer.game.skin.SkinTextureWrapper;
 import org.easylauncher.renderer.state.Cleanable;
 import org.joml.Matrix4f;
 
@@ -34,8 +35,9 @@ public final class Scene implements Cleanable {
     private final Material capeMaterial;
     private final Material skinMaterial;
 
-    private Texture alexSkinTexture;
-    private Texture steveSkinTexture;
+    private SkinTextureWrapper alexSkinTexture;
+    private SkinTextureWrapper steveSkinTexture;
+    private boolean showingDefaultSkin;
 
     public Scene(int width, int height, Camera camera, SceneLights sceneLights) {
         this.projection = new Projection(width, height);
@@ -60,16 +62,16 @@ public final class Scene implements Cleanable {
         cleanupTexture(skinMaterial.getTexture());
     }
 
-    public Texture getAlexSkinTexture() throws TextureLoadException {
+    public SkinTextureWrapper getAlexSkinTexture() throws TextureLoadException {
         if (alexSkinTexture == null)
-            this.alexSkinTexture = loadDefaultSkinTexture("alex");
+            this.alexSkinTexture = SkinTextureWrapper.wrap(loadDefaultSkinTexture("alex"), true);
 
         return alexSkinTexture;
     }
 
-    public Texture getSteveSkinTexture() throws TextureLoadException {
+    public SkinTextureWrapper getSteveSkinTexture() throws TextureLoadException {
         if (steveSkinTexture == null)
-            this.steveSkinTexture = loadDefaultSkinTexture("steve");
+            this.steveSkinTexture = SkinTextureWrapper.wrap(loadDefaultSkinTexture("steve"), false);
 
         return steveSkinTexture;
     }

@@ -12,15 +12,16 @@ public final class Material {
         return texture != null;
     }
 
-    public boolean updateTexture(Texture texture) {
+    public Texture updateTexture(Texture texture) {
         int currentTextureId = this.texture != null ? this.texture.getId() : -1;
         int newTextureId = texture != null ? texture.getId() : -1;
 
         if (currentTextureId != newTextureId) {
+            Texture previous = this.texture;
             this.texture = texture;
-            return true;
+            return previous;
         } else {
-            return false;
+            return null;
         }
     }
 

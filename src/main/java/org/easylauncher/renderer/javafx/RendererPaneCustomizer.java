@@ -2,6 +2,7 @@ package org.easylauncher.renderer.javafx;
 
 import org.easylauncher.renderer.composition.SceneComposition;
 import org.easylauncher.renderer.context.ViewDesire;
+import org.easylauncher.renderer.game.skin.resolver.DefaultSkinResolver;
 
 public interface RendererPaneCustomizer {
 
@@ -10,6 +11,8 @@ public interface RendererPaneCustomizer {
     RendererPaneCustomizer desireView(ViewDesire viewDesire);
 
     RendererPaneCustomizer sceneComposition(SceneComposition.Maker compositionMaker);
+
+    RendererPaneCustomizer defaultSkinResolver(DefaultSkinResolver defaultSkinResolver);
 
     RendererPaneCustomizer enableAnimations();
 
