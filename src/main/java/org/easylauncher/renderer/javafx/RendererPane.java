@@ -7,20 +7,22 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.layout.StackPane;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.easylauncher.renderer.composition.SceneComposition;
 import org.easylauncher.renderer.context.RenderOptions;
 import org.easylauncher.renderer.context.RendererContext;
 import org.easylauncher.renderer.engine.Engine;
 import org.easylauncher.renderer.engine.exception.shader.ShaderGLException;
 import org.easylauncher.renderer.engine.exception.shader.ShaderLoadException;
-import org.easylauncher.renderer.engine.graph.texture.Texture;
+import org.easylauncher.renderer.engine.graph.texture.source.TextureSource;
 import org.easylauncher.renderer.engine.scene.Scene;
 import org.easylauncher.renderer.javafx.behavior.InteractivePaneBehavior;
+import org.easylauncher.renderer.state.Bindable;
 
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public final class RendererPane extends StackPane {
+public final class RendererPane extends StackPane implements Bindable {
 
     private static final String DEFAULT_STYLE_CLASS = "renderer-pane";
 
@@ -42,6 +44,7 @@ public final class RendererPane extends StackPane {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
+    @SneakyThrows
     public void initialize(RenderOptions renderOptions, Consumer<RendererPaneCustomizer> customizer) {
         RendererPaneCustomizerBase customizerBase = new RendererPaneCustomizerBase();
         customizer.accept(customizerBase);
@@ -54,10 +57,26 @@ public final class RendererPane extends StackPane {
         canvas.addOnRenderEvent(event -> onCanvasRender(event.fps, event.delta));
         canvas.addOnDisposeEvent(event -> onCanvasDispose());
 
-        if (customizerBase.isInteractive())
+        if (customizerBase.isInteractive()) {
             this.interactivePaneBehavior = new InteractivePaneBehavior(this, customizerBase.getMouseSensitivity());
+            this.interactivePaneBehavior.initialize();
+        }
 
         getChildren().add(canvas);
+    }
+
+    @Override
+    public void bind() {
+        if (interactivePaneBehavior != null) {
+            interactivePaneBehavior.bind();
+        }
+    }
+
+    @Override
+    public void unbind() {
+        if (interactivePaneBehavior != null) {
+            interactivePaneBehavior.unbind();
+        }
     }
 
     public void updateGraphics() {
@@ -114,10 +133,10 @@ public final class RendererPane extends StackPane {
     }
 
     // --- player skin texture
-    private ObjectProperty<Texture> playerSkin;
-    public Texture getPlayerSkin() { return playerSkin != null ? playerSkin.get() : null; }
-    public void setPlayerSkin(Texture value) { playerSkinProperty().set(value); }
-    public ObjectProperty<Texture> playerSkinProperty() {
+    private ObjectProperty<TextureSource> playerSkin;
+    public TextureSource getPlayerSkin() { return playerSkin != null ? playerSkin.get() : null; }
+    public void setPlayerSkin(TextureSource value) { playerSkinProperty().set(value); }
+    public ObjectProperty<TextureSource> playerSkinProperty() {
         if (playerSkin == null) {
             this.playerSkin = new SimpleObjectProperty<>(this, "Player Skin");
             this.playerSkin.addListener((a, from, to) -> this.skinChanged = true);
@@ -127,10 +146,10 @@ public final class RendererPane extends StackPane {
     }
 
     // --- player cape texture
-    private ObjectProperty<Texture> playerCape;
-    public Texture getPlayerCape() { return playerCape != null ? playerCape.get() : null; }
-    public void setPlayerCape(Texture value) { playerCapeProperty().set(value); }
-    public ObjectProperty<Texture> playerCapeProperty() {
+    private ObjectProperty<TextureSource> playerCape;
+    public TextureSource getPlayerCape() { return playerCape != null ? playerCape.get() : null; }
+    public void setPlayerCape(TextureSource value) { playerCapeProperty().set(value); }
+    public ObjectProperty<TextureSource> playerCapeProperty() {
         if (playerCape == null) {
             this.playerCape = new SimpleObjectProperty<>(this, "Player Cape");
             this.playerCape.addListener((a, from, to) -> this.capeChanged = true);
