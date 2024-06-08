@@ -12,6 +12,10 @@ public interface TextureSource {
         return new FileTextureSource(filePath);
     }
 
+    static ByteArrayTextureSource fromBytes(byte[] bytes) {
+        return new ByteArrayTextureSource(bytes);
+    }
+
     static URLTextureSource fromURL(URL url) {
         return new URLTextureSource(url);
     }

@@ -36,8 +36,9 @@ public class Entity {
     }
 
     public void updateTransformMatrix() {
-        transformMatrix.translate(position);
-        transformMatrix.scale(scale);
+        transformMatrix.identity()
+                .translate(position)
+                .scale(scale);
     }
 
     public void updateRotationMatrix() {

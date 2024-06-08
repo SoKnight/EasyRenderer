@@ -55,6 +55,7 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
     private InteractivePaneBehavior interactivePaneBehavior;
     private boolean capeChanged;
     private boolean skinChanged;
+    private boolean uuidChanged;
 
     public RendererPane() {
         initialize();
@@ -123,12 +124,11 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
         Scene scene = renderContext.getScene();
         Material capeMaterial = scene.getCapeMaterial();
         Material skinMaterial = scene.getSkinMaterial();
-        Texture previousTexture = null;
 
         if (capeChanged) {
             TextureSource capeSource = getPlayerCape();
             Texture capeTexture = capeSource != null ? capeSource.getOrLoadTexture() : null;
-            previousTexture = capeMaterial.updateTexture(capeTexture);
+            Texture previousTexture = capeMaterial.updateTexture(capeTexture);
 
             if (previousTexture != null) {
                 previousTexture.cleanup();
@@ -138,20 +138,22 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
         if (skinChanged) {
             TextureSource skinSource = getPlayerSkin();
             Texture skinTexture = skinSource != null ? skinSource.getOrLoadTexture() : null;
-            previousTexture = skinMaterial.updateTexture(skinTexture);
+            Texture previousTexture = skinMaterial.updateTexture(skinTexture);
 
             if (previousTexture != null && !scene.isShowingDefaultSkin()) {
                 previousTexture.cleanup();
             }
         }
 
-        if (!skinMaterial.hasTexture()) {
+        if (!skinMaterial.hasTexture() || (scene.isShowingDefaultSkin() && uuidChanged)) {
             UUID playerUUID = getPlayerUUID();
             SkinTextureWrapper skinTexture = defaultSkinResolver.resolveSkinTexture(scene, playerUUID);
-            sceneComposition.updateArmsThickness(skinTexture.isThinArms());
+            renderContext.getRenderOptions().thinArms(skinTexture.isThinArms());
             skinMaterial.updateTexture(skinTexture);
             scene.setShowingDefaultSkin(true);
         }
+
+        sceneComposition.updateArmsThickness(renderContext.getRenderOptions().thinArms());
     }
 
     private void onCanvasInit(RenderOptions renderOptions, SceneComposition.Maker compositionMaker) {
@@ -175,7 +177,6 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
     private void onCanvasRender(int fps, double delta) {
         if (renderContext.isAvailable()) {
             try {
-                sceneComposition.updateArmsThickness(renderContext.getRenderOptions().thinArms());
                 updateTextures();
                 renderContext.render();
             } catch (ShaderGLException | TextureLoadException ex) {
@@ -196,8 +197,10 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
     public UUID getPlayerUUID() { return playerUUID != null ? playerUUID.get() : null; }
     public void setPlayerUUID(UUID value) { playerUUIDProperty().set(value); }
     public ObjectProperty<UUID> playerUUIDProperty() {
-        if (playerUUID == null)
+        if (playerUUID == null) {
             this.playerUUID = new SimpleObjectProperty<>(this, "Player UUID");
+            this.playerUUID.addListener((a, from, to) -> this.uuidChanged = true);
+        }
 
         return playerUUID;
     }

@@ -21,7 +21,7 @@ public final class TextureLoader {
 
     public static Texture loadFrom(URL url) throws TextureLoadException {
         try (InputStream stream = url.openStream()) {
-            return loadFrom(stream, stream.available());
+            return loadFrom(stream);
         } catch (IOException ex) {
             throw new TextureLoadException(ex);
         }
@@ -33,6 +33,14 @@ public final class TextureLoader {
             try (InputStream stream = Files.newInputStream(path)) {
                 return loadFrom(stream, Math.toIntExact(size));
             }
+        } catch (IOException ex) {
+            throw new TextureLoadException(ex);
+        }
+    }
+
+    public static Texture loadFrom(InputStream stream) throws TextureLoadException {
+        try {
+            return loadFrom(stream, stream.available());
         } catch (IOException ex) {
             throw new TextureLoadException(ex);
         }
