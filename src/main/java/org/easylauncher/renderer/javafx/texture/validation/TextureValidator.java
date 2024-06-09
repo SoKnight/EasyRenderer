@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public final class TextureValidator {
 
-    private static final int[] SUPPORTED_SCALE_FACTORS = new int[] { 1, 2, 4, 8 };
+    private static final int[] SUPPORTED_SCALE_FACTORS = new int[] { 1, 2, 4, 8, 16 };
 
     public static void validateTextureImageSize(int width, int height, TextureType textureType) throws
             TooSmallTextureException,
@@ -38,7 +38,7 @@ public final class TextureValidator {
     }
 
     public static void validateTextureScale(int width, int height, int scale) throws UnsupportedTextureScaleException {
-        if (scale >= 1 && scale <= 8)
+        if (scale >= 1 && scale <= 16)
             for (int supportedScaleFactor : SUPPORTED_SCALE_FACTORS)
                 if (supportedScaleFactor == scale)
                     return;
@@ -53,7 +53,7 @@ public final class TextureValidator {
             throw new IllegalArgumentException("Image must be fully loaded!");
 
         if (image.isError())
-            throw new IllegalArgumentException("Image wasn't loaded due to an error!");
+            throw new IllegalArgumentException("Image wasn't loaded due to an error!", image.getException());
     }
 
 }

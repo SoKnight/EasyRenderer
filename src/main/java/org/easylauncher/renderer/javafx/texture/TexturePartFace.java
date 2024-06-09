@@ -17,12 +17,12 @@ public enum TexturePartFace {
         int d = part.getDepth();
 
         int[] bounds = switch (this) {
-            case LEFT -> new int[] { 0, d, d, h};
-            case FRONT -> new int[] { d, d, w, h };
-            case RIGHT -> new int[] { d + w, d, d, h };
-            case BACK -> new int[] { d + w + d, w, h };
-            case TOP -> new int[] { d, 0, w, d };
-            case BOTTOM -> new int[] { d + w, 0, w, d };
+            case LEFT -> new int[]      {0,         d,  d,  h};
+            case FRONT -> new int[]     {d,         d,  w,  h};
+            case RIGHT -> new int[]     {d + w,     d,  d,  h};
+            case BACK -> new int[]      {d + w + d, d,  w,  h};
+            case TOP -> new int[]       {d,         0,  w,  d};
+            case BOTTOM -> new int[]    {d + w,     0,  w,  d};
         };
 
         // adjust X and Y with texture part start-coords

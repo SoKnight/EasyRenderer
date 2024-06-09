@@ -33,12 +33,12 @@ public class ArmModel extends SkinModelBase {
 
     @Override
     protected Mesh[] getRelevantMeshes(RenderOptions options) {
-        return options.thinArms() ? thinArmsMeshes : thickArmsMeshes;
+        return options.skinThinArms() ? thinArmsMeshes : thickArmsMeshes;
     }
 
     @Override
     public ArmEntity createEntity(RenderOptions options) {
-        return new ArmEntity(left, options.thinArms());
+        return new ArmEntity(left, options.skinThinArms());
     }
 
 }

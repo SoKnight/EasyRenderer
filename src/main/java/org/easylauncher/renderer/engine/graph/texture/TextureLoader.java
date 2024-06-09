@@ -90,6 +90,23 @@ public final class TextureLoader {
         }
     }
 
+    public static Texture loadFromPixelBuffer(int width, int height, byte[] pixelBuffer) {
+        ByteBuffer buffer = null;
+
+        try {
+            buffer = MemoryUtil.memAlloc(pixelBuffer.length);
+            buffer.put(pixelBuffer);
+            buffer.flip();
+
+            int textureId = generateTexture(width, height, buffer);
+            return new TextureBase(textureId);
+        } finally {
+            if (buffer != null) {
+                MemoryUtil.memFree(buffer);
+            }
+        }
+    }
+
     private static int generateTexture(int width, int height, ByteBuffer buffer) {
         int textureId = glGenTextures();
 

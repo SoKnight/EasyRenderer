@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import static org.easylauncher.renderer.context.SkinPart.ALL_LAYERS;
+
 @Getter
 @Setter
 @Accessors(chain = true, fluent = true)
@@ -11,12 +13,17 @@ public final class RenderOptions {
 
     private int visibleLayersMask;
     private boolean showCape;
-    private boolean thinArms;
+    private boolean skinThinArms;
+    private boolean legacySkinTexture;
+    private int capeScale, skinScale;
 
     public RenderOptions() {
-        this.visibleLayersMask = SkinPart.ALL_LAYERS;
+        this.visibleLayersMask = ALL_LAYERS;
         this.showCape = true;
-        this.thinArms = false;
+        this.skinThinArms = false;
+        this.legacySkinTexture = false;
+        this.capeScale = 1;
+        this.skinScale = 1;
     }
 
     public boolean isInnerLayerVisible(SkinPart layer) {

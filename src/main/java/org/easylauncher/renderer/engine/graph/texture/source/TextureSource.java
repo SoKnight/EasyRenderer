@@ -12,6 +12,10 @@ public interface TextureSource {
         return new FileTextureSource(filePath);
     }
 
+    static PixelBufferTextureSource fromPixelBuffer(int width, int height, byte[] pixelBuffer) {
+        return new PixelBufferTextureSource(width, height, pixelBuffer);
+    }
+
     static ByteArrayTextureSource fromBytes(byte[] bytes) {
         return new ByteArrayTextureSource(bytes);
     }
