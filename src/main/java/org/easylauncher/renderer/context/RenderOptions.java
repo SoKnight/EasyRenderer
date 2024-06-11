@@ -19,7 +19,7 @@ public final class RenderOptions {
 
     public RenderOptions() {
         this.visibleLayersMask = ALL_LAYERS;
-        this.showCape = true;
+        this.showCape = false;
         this.skinThinArms = false;
         this.legacySkinTexture = false;
         this.capeScale = 1;
