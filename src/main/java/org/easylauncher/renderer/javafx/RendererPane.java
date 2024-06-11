@@ -1,6 +1,7 @@
 package org.easylauncher.renderer.javafx;
 
 import com.huskerdev.openglfx.canvas.GLCanvas;
+import com.huskerdev.openglfx.canvas.GLCanvasAnimator;
 import com.huskerdev.openglfx.canvas.GLProfile;
 import com.huskerdev.openglfx.lwjgl.LWJGLExecutor;
 import javafx.beans.property.ObjectProperty;
@@ -20,6 +21,7 @@ import org.easylauncher.renderer.engine.graph.texture.Texture;
 import org.easylauncher.renderer.engine.scene.Scene;
 import org.easylauncher.renderer.game.skin.SkinTextureWrapper;
 import org.easylauncher.renderer.game.skin.resolver.DefaultSkinResolver;
+import org.easylauncher.renderer.javafx.behavior.AnimatedPaneBehavior;
 import org.easylauncher.renderer.javafx.behavior.InteractivePaneBehavior;
 import org.easylauncher.renderer.javafx.texture.TextureImageWrapper;
 import org.easylauncher.renderer.javafx.texture.TextureType;
@@ -56,7 +58,9 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
     private SceneComposition sceneComposition;
     private DefaultSkinResolver defaultSkinResolver;
 
+    private AnimatedPaneBehavior animatedPaneBehavior;
     private InteractivePaneBehavior interactivePaneBehavior;
+
     private boolean capeChanged;
     private boolean skinChanged;
     private boolean uuidChanged;
@@ -89,6 +93,17 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
         canvas.addOnRenderEvent(event -> onCanvasRender(event.fps, event.delta));
         canvas.addOnDisposeEvent(event -> onCanvasDispose());
 
+        if (customizerBase.isAnimated()) {
+            this.animatedPaneBehavior = new AnimatedPaneBehavior(
+                    this,
+                    customizerBase.getAnimatorFps(),
+                    customizerBase.getCapeAnimationDuration(),
+                    customizerBase.getSkinAnimationDuration()
+            );
+
+            animatedPaneBehavior.initialize();
+        }
+
         if (customizerBase.isInteractive()) {
             this.interactivePaneBehavior = new InteractivePaneBehavior(this, customizerBase.getMouseSensitivity());
             this.interactivePaneBehavior.initialize();
@@ -99,6 +114,10 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
 
     @Override
     public void bind() {
+        if (animatedPaneBehavior != null) {
+            animatedPaneBehavior.bind();
+        }
+
         if (interactivePaneBehavior != null) {
             interactivePaneBehavior.bind();
         }
@@ -113,6 +132,10 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
 
     @Override
     public void unbind() {
+        if (animatedPaneBehavior != null) {
+            animatedPaneBehavior.unbind();
+        }
+
         if (interactivePaneBehavior != null) {
             interactivePaneBehavior.unbind();
         }
@@ -124,10 +147,39 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
         }
     }
 
+    public boolean isAnimationPlaying() {
+        return animatedPaneBehavior != null && animatedPaneBehavior.isPlaying();
+    }
+
+    public void playAnimation() {
+        if (animatedPaneBehavior != null) {
+            animatedPaneBehavior.play();
+        }
+    }
+
+    public void pauseAnimation() {
+        if (animatedPaneBehavior != null) {
+            animatedPaneBehavior.pause();
+        }
+    }
+
+    public void resetAnimation() {
+        if (animatedPaneBehavior != null) {
+            animatedPaneBehavior.reset();
+        }
+    }
+
+    public void setCanvasAnimator(GLCanvasAnimator animator) {
+        if (canvas != null) {
+            canvas.setAnimator(animator);
+        }
+    }
+
     private void updateTextures() throws TextureLoadException {
         Scene scene = renderContext.getScene();
         Material capeMaterial = scene.getCapeMaterial();
         Material skinMaterial = scene.getSkinMaterial();
+        boolean shouldUpdateArmThickness = false;
 
         if (capeChanged) {
             TextureImageWrapper capeImage = getCapeTexture();
@@ -140,6 +192,8 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
             renderContext.getRenderOptions()
                     .capeScale(capeImage != null ? capeImage.getScale() : 1)
                     .showCape(capeTexture != null);
+
+            this.capeChanged = false;
         }
 
         if (skinChanged) {
@@ -157,6 +211,10 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
                     .visibleLayersMask(skinImage != null ? skinImage.getVisibleLayersMask() : ALL_LAYERS);
 
             scene.setShowingDefaultSkin(false);
+            resetAnimation();
+
+            shouldUpdateArmThickness = true;
+            this.skinChanged = false;
         }
 
         if (!skinMaterial.hasTexture() || (scene.isShowingDefaultSkin() && uuidChanged)) {
@@ -169,9 +227,15 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
 
             skinMaterial.updateTexture(skinTexture);
             scene.setShowingDefaultSkin(true);
+            resetAnimation();
+
+            shouldUpdateArmThickness = true;
+            this.uuidChanged = false;
         }
 
-        sceneComposition.updateArmsThickness(renderContext.getRenderOptions().skinThinArms());
+        if (shouldUpdateArmThickness) {
+            sceneComposition.updateArmsThickness(renderContext.getRenderOptions().skinThinArms());
+        }
     }
 
     private void onCanvasInit(RenderOptions renderOptions, SceneComposition.Maker compositionMaker) {

@@ -22,7 +22,7 @@ public final class InteractivePaneBehavior implements RendererPaneBehavior {
     }
 
     @Override
-    public void initialize() throws Exception {
+    public void initialize() {
         this.mouseMovedHandler = event -> {
             this.previousX = event.getX();
             this.previousY = event.getY();

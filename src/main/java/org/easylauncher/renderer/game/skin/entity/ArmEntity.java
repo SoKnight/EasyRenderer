@@ -1,12 +1,13 @@
 package org.easylauncher.renderer.game.skin.entity;
 
 import lombok.Getter;
+import org.easylauncher.renderer.state.Animated;
 
 import static org.easylauncher.renderer.engine.graph.Model.MODEL_ID_LEFT_ARM;
 import static org.easylauncher.renderer.engine.graph.Model.MODEL_ID_RIGHT_ARM;
 
 @Getter
-public class ArmEntity extends SkinEntityBase {
+public class ArmEntity extends SkinEntityBase implements Animated {
 
     private final boolean left;
     private boolean thin;
@@ -23,6 +24,12 @@ public class ArmEntity extends SkinEntityBase {
 
         getRotationX().setAngleDeg(left ? 18F : -18F);
         getRotationX().setPivot(-computePositionX(0F, left, thin), 4F, 0F);
+        updateRotationMatrix();
+    }
+
+    @Override
+    public void updateAnimation(float timeFactor) {
+        getRotationX().setAngleDeg((left ? -36F : 36F) * timeFactor);
         updateRotationMatrix();
     }
 

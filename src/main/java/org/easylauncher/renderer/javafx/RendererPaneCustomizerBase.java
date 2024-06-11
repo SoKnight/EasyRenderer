@@ -1,5 +1,6 @@
 package org.easylauncher.renderer.javafx;
 
+import javafx.util.Duration;
 import lombok.Getter;
 import org.easylauncher.renderer.composition.SceneComposition;
 import org.easylauncher.renderer.context.ViewDesire;
@@ -13,7 +14,10 @@ final class RendererPaneCustomizerBase implements RendererPaneCustomizer {
     private ViewDesire viewDesire;
     private SceneComposition.Maker compositionMaker;
     private DefaultSkinResolver defaultSkinResolver;
-    private boolean animationsEnabled;
+    private boolean animated;
+    private double animatorFps;
+    private Duration capeAnimationDuration;
+    private Duration skinAnimationDuration;
     private boolean interactive;
     private float mouseSensitivity;
 
@@ -21,7 +25,10 @@ final class RendererPaneCustomizerBase implements RendererPaneCustomizer {
         this.viewDesire = ViewDesire.SKIN;
         this.compositionMaker = SceneComposition.Maker.DEFAULT;
         this.defaultSkinResolver = DefaultSkinResolver.PLAYER_UUID_BASED;
-        this.animationsEnabled = false;
+        this.animated = false;
+        this.animatorFps = DEFAULT_ANIMATOR_FPS;
+        this.capeAnimationDuration = DEFAULT_CAPE_ANIMATION_DURATION;
+        this.skinAnimationDuration = DEFAULT_SKIN_ANIMATION_DURATION;
         this.interactive = false;
         this.mouseSensitivity = DEFAULT_MOUSE_SENSITIVITY;
     }
@@ -48,8 +55,30 @@ final class RendererPaneCustomizerBase implements RendererPaneCustomizer {
     }
 
     @Override
-    public RendererPaneCustomizer enableAnimations() {
-        this.animationsEnabled = true;
+    public RendererPaneCustomizer makeAnimated() {
+        return makeAnimated(0D);
+    }
+
+    @Override
+    public RendererPaneCustomizer makeAnimated(double animatorFps) {
+        if (animatorFps > 0D)
+            this.animatorFps = animatorFps;
+
+        this.animated = true;
+        return this;
+    }
+
+    @Override
+    public RendererPaneCustomizer capeAnimationDuration(Duration animationDuration) {
+        Objects.requireNonNull(animationDuration);
+        this.capeAnimationDuration = animationDuration;
+        return this;
+    }
+
+    @Override
+    public RendererPaneCustomizer skinAnimationDuration(Duration animationDuration) {
+        Objects.requireNonNull(animationDuration);
+        this.skinAnimationDuration = animationDuration;
         return this;
     }
 
