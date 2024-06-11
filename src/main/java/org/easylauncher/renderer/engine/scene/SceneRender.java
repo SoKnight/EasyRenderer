@@ -7,7 +7,6 @@ import org.easylauncher.renderer.engine.exception.shader.ShaderLoadException;
 import org.easylauncher.renderer.engine.graph.Entity;
 import org.easylauncher.renderer.engine.graph.Material;
 import org.easylauncher.renderer.engine.graph.Model;
-import org.easylauncher.renderer.engine.graph.mesh.Mesh;
 import org.easylauncher.renderer.engine.graph.texture.Texture;
 import org.easylauncher.renderer.engine.light.AmbientLight;
 import org.easylauncher.renderer.engine.light.DirectedLight;
@@ -56,6 +55,10 @@ public final class SceneRender implements Cleanable {
         Material currentMaterial = null;
 
         for (Model model : models) {
+            List<Entity> entities = model.getEntities();
+            if (entities.isEmpty())
+                continue;
+
             Material desiredMaterial = model instanceof MaterialDesiring cast ? cast.getDesiredMaterial(scene) : null;
             if (!Objects.equals(currentMaterial, desiredMaterial)) {
                 currentMaterial = desiredMaterial;
@@ -70,20 +73,17 @@ public final class SceneRender implements Cleanable {
                 }
             }
 
-            Mesh[] meshes = model.getRenderableMeshes(renderOptions);
-            if (meshes != null) {
-                for (Mesh mesh : meshes) {
-                    List<Entity> entities = model.getEntities();
-                    if (entities.isEmpty())
-                        continue;
+            for (Entity entity : entities) {
+                uniforms.put("modelTransformMatrix", entity.getTransformMatrix());
+                uniforms.put("modelRotationMatrix", entity.getRotationMatrix());
+
+                model.renderMeshes(renderOptions, mesh -> {
+                    if (mesh == null)
+                        return;
 
                     mesh.bind();
-                    for (Entity entity : entities) {
-                        uniforms.put("modelTransformMatrix", entity.getTransformMatrix());
-                        uniforms.put("modelRotationMatrix", entity.getRotationMatrix());
-                        mesh.draw(uniforms);
-                    }
-                }
+                    mesh.draw(uniforms);
+                });
             }
         }
 

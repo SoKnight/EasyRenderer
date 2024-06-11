@@ -85,7 +85,7 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
             customizer.accept(customizerBase);
 
         this.renderContext = Engine.CURRENT.loadContext(renderOptions, customizerBase.getViewDesire());
-        this.canvas = new GLCanvas(LWJGLExecutor.LWJGL_MODULE, GLProfile.Core, false, 16, true);
+        this.canvas = new GLCanvas(LWJGLExecutor.LWJGL_MODULE, GLProfile.Core, false, 16, false); // TODO ASYNC HERE
         this.defaultSkinResolver = customizerBase.getDefaultSkinResolver();
 
         canvas.addOnInitEvent(event -> onCanvasInit(renderOptions, customizerBase.getCompositionMaker()));

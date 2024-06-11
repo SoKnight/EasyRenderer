@@ -1,4 +1,6 @@
 .idea/
 target/
+out/
+src/main/resources/META-INF/
 .DS_Store
 *.iml

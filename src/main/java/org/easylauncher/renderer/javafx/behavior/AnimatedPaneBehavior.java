@@ -54,7 +54,7 @@ public final class AnimatedPaneBehavior implements RendererPaneBehavior {
 
     @Override
     public void bind() {
-        rendererPane.setCanvasAnimator(new GLCanvasAnimator(animatorFps));
+        rendererPane.setCanvasAnimator(new GLCanvasAnimator(60));  // TODO ANIMATOR HERE
     }
 
     @Override

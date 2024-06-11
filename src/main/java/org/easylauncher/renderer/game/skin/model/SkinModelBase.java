@@ -3,24 +3,21 @@ package org.easylauncher.renderer.game.skin.model;
 import lombok.Getter;
 import org.easylauncher.renderer.context.RenderOptions;
 import org.easylauncher.renderer.context.SkinPart;
+import org.easylauncher.renderer.engine.exception.shader.ShaderGLException;
 import org.easylauncher.renderer.engine.graph.Material;
 import org.easylauncher.renderer.engine.graph.Model;
-import org.easylauncher.renderer.engine.graph.mesh.Mesh;
 import org.easylauncher.renderer.engine.scene.Scene;
 import org.easylauncher.renderer.state.MaterialDesiring;
+import org.easylauncher.renderer.util.MeshRenderFunction;
 
 @Getter
 public abstract class SkinModelBase extends Model implements MaterialDesiring {
 
-    private final SkinPart skinPart;
+    protected final SkinPart skinPart;
 
-    SkinModelBase(byte modelId, SkinPart skinPart, Mesh... meshes) {
-        super(modelId, meshes);
+    SkinModelBase(byte modelId, SkinPart skinPart, int tensorSize) {
+        super(modelId, tensorSize);
         this.skinPart = skinPart;
-    }
-
-    protected Mesh[] getRelevantMeshes(RenderOptions options) {
-        return meshes;
     }
 
     @Override
@@ -29,19 +26,12 @@ public abstract class SkinModelBase extends Model implements MaterialDesiring {
     }
 
     @Override
-    public Mesh[] getRenderableMeshes(RenderOptions options) {
-        boolean inner = options.isInnerLayerVisible(skinPart);
-        boolean outer = options.isOuterLayerVisible(skinPart);
+    public void renderMeshes(RenderOptions options, MeshRenderFunction renderFunction) throws ShaderGLException {
+        if (options.isInnerLayerVisible(skinPart))
+            renderFunction.render(mesh(false, options.legacySkinTexture()));
 
-        if (inner || outer) {
-            Mesh[] meshes = getRelevantMeshes(options);
-            if (inner && outer)
-                return meshes;
-
-            return new Mesh[]{ meshes[inner ? 0 : 1] };
-        }
-
-        return null;
+        if (options.isOuterLayerVisible(skinPart))
+            renderFunction.render(mesh(true, options.legacySkinTexture()));
     }
 
 }
