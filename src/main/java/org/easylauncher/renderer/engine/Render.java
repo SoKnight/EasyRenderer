@@ -11,6 +11,7 @@ import org.easylauncher.renderer.state.Initializable;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.glBlendFuncSeparate;
 
 public final class Render implements Cleanable, Initializable {
 
@@ -34,7 +35,7 @@ public final class Render implements Cleanable, Initializable {
         GL.createCapabilities();
 
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
