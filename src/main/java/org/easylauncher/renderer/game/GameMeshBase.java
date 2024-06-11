@@ -4,11 +4,14 @@ import org.easylauncher.renderer.engine.graph.mesh.TexturedCuboidMesh;
 
 public class GameMeshBase extends TexturedCuboidMesh {
 
+    protected static final float UV32 = 0.031250F;
+    protected static final float UV64 = 0.015625F;
+
     public GameMeshBase(int width, int height, int depth, float enlarge, float[] textureCoords) {
         super(width, height, depth, enlarge, textureCoords);
     }
 
-    protected static float[] computeTextureCoords(int width, int height, int depth, int u0, int v0, float u, float v) {
+    protected static float[] computeTextureCoords(int width, int height, int depth, int u0, int v0, float u, float v, boolean flipByX) {
         float wu = width * u;
         float hv = height * v;
         float du = depth * u;

@@ -37,8 +37,8 @@ public class TexturedCuboidMesh extends MeshBase {
     public TexturedCuboidMesh(int width, int height, int depth, float enlarge, float[] textureCoords) {
         float[] vertexCoords = computeVertexCoords(width, height, depth, enlarge);
 
-        float[] positions = new float[INDICES.length * 3];
-        float[] normals = new float[INDICES.length * 3];
+        float[] positions = new float[VERTICES_COUNT * 3];
+        float[] normals = new float[VERTICES_COUNT * 3];
         computePositionsAndNormals(positions, normals, vertexCoords);
 
         initVAO(positions, normals, textureCoords, INDICES);
