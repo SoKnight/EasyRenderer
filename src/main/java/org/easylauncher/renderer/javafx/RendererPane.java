@@ -1,9 +1,7 @@
 package org.easylauncher.renderer.javafx;
 
+import com.huskerdev.grapl.gl.GLProfile;
 import com.huskerdev.openglfx.canvas.GLCanvas;
-import com.huskerdev.openglfx.canvas.GLCanvasAnimator;
-import com.huskerdev.openglfx.canvas.GLProfile;
-import com.huskerdev.openglfx.lwjgl.LWJGLExecutor;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.layout.StackPane;
@@ -34,6 +32,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import static com.huskerdev.openglfx.lwjgl.LWJGLExecutor.LWJGL_MODULE;
 import static org.easylauncher.renderer.context.SkinPart.ALL_LAYERS;
 import static org.easylauncher.renderer.context.SkinPart.INNER_LAYERS;
 
@@ -85,7 +84,7 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
             customizer.accept(customizerBase);
 
         this.renderContext = Engine.CURRENT.loadContext(renderOptions, customizerBase.getViewDesire());
-        this.canvas = new GLCanvas(LWJGLExecutor.LWJGL_MODULE, GLProfile.Core, false, 16, false); // TODO ASYNC HERE
+        this.canvas = new GLCanvas(LWJGL_MODULE, GLProfile.CORE, false, 16);
         this.defaultSkinResolver = customizerBase.getDefaultSkinResolver();
 
         canvas.addOnInitEvent(event -> onCanvasInit(renderOptions, customizerBase.getCompositionMaker()));
@@ -169,9 +168,9 @@ public final class RendererPane extends StackPane implements Bindable, Cleanable
         }
     }
 
-    public void setCanvasAnimator(GLCanvasAnimator animator) {
+    public void setFps(int fps) {
         if (canvas != null) {
-            canvas.setAnimator(animator);
+            canvas.setFps(fps);
         }
     }
 

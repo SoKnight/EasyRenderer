@@ -9,7 +9,7 @@ public interface RendererPaneCustomizer {
 
     Duration DEFAULT_CAPE_ANIMATION_DURATION = Duration.seconds(3D);
     Duration DEFAULT_SKIN_ANIMATION_DURATION = Duration.millis(750D);
-    double DEFAULT_ANIMATOR_FPS = 60D;
+    int DEFAULT_ANIMATOR_FPS = 60;
     float DEFAULT_MOUSE_SENSITIVITY = 0.5F;
 
     RendererPaneCustomizer desireView(ViewDesire viewDesire);
@@ -20,7 +20,7 @@ public interface RendererPaneCustomizer {
 
     RendererPaneCustomizer makeAnimated();
 
-    RendererPaneCustomizer makeAnimated(double animatorFps);
+    RendererPaneCustomizer makeAnimated(int animatorFps);
 
     RendererPaneCustomizer capeAnimationDuration(Duration animationDuration);
 

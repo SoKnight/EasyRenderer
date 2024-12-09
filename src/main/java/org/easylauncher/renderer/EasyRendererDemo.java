@@ -51,11 +51,12 @@ public final class EasyRendererDemo extends Application {
 
         rendererPane.initialize(renderOptions, customizer -> customizer
                 .desireView(ViewDesire.SKIN)
-                .makeAnimated()
-                .makeInteractive());
+//                .makeAnimated()
+                .makeInteractive()
+        );
 
         rendererPane.bind();
-        rendererPane.playAnimation();
+//        rendererPane.playAnimation();
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,5 @@
 package org.easylauncher.renderer.javafx.behavior;
 
-import com.huskerdev.openglfx.canvas.GLCanvasAnimator;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.util.Duration;
@@ -21,7 +20,7 @@ public final class AnimatedPaneBehavior implements RendererPaneBehavior {
     private final RendererPane rendererPane;
     private final RendererContext rendererContext;
 
-    private final double animatorFps;
+    private final int animatorFps;
     private final Duration capeAnimationDuration;
     private final Duration skinAnimationDuration;
 
@@ -33,7 +32,7 @@ public final class AnimatedPaneBehavior implements RendererPaneBehavior {
 
     public AnimatedPaneBehavior(
             RendererPane rendererPane,
-            double animatorFps,
+            int animatorFps,
             Duration capeAnimationDuration,
             Duration skinAnimationDuration
     ) {
@@ -54,7 +53,7 @@ public final class AnimatedPaneBehavior implements RendererPaneBehavior {
 
     @Override
     public void bind() {
-        rendererPane.setCanvasAnimator(new GLCanvasAnimator(60));  // TODO ANIMATOR HERE
+        rendererPane.setFps(animatorFps);
     }
 
     @Override
@@ -65,7 +64,7 @@ public final class AnimatedPaneBehavior implements RendererPaneBehavior {
         skinAnimation.stop();
         skinAnimation.jumpTo(Duration.ZERO);
 
-        rendererPane.setCanvasAnimator(null);
+        rendererPane.setFps(0);
     }
 
     public void play() {

@@ -15,7 +15,7 @@ final class RendererPaneCustomizerBase implements RendererPaneCustomizer {
     private SceneComposition.Maker compositionMaker;
     private DefaultSkinResolver defaultSkinResolver;
     private boolean animated;
-    private double animatorFps;
+    private int animatorFps;
     private Duration capeAnimationDuration;
     private Duration skinAnimationDuration;
     private boolean interactive;
@@ -56,12 +56,12 @@ final class RendererPaneCustomizerBase implements RendererPaneCustomizer {
 
     @Override
     public RendererPaneCustomizer makeAnimated() {
-        return makeAnimated(0D);
+        return makeAnimated(-1);
     }
 
     @Override
-    public RendererPaneCustomizer makeAnimated(double animatorFps) {
-        if (animatorFps > 0D)
+    public RendererPaneCustomizer makeAnimated(int animatorFps) {
+        if (animatorFps > 0)
             this.animatorFps = animatorFps;
 
         this.animated = true;

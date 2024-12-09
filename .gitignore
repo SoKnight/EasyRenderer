@@ -1,6 +1,7 @@
 .idea/
-target/
-out/
-src/main/resources/META-INF/
+.gradle/
+/build/
+/target/
+/out/
 .DS_Store
 *.iml
