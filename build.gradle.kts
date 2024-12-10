@@ -1,5 +1,4 @@
 plugins {
-    java
     id("org.jetbrains.kotlin.jvm") version "2.0.0"
 }
 
@@ -20,7 +19,6 @@ repositories {
 
 dependencies {
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
-    implementation("com.huskerdev:openglfx:4.1.1")
     implementation("com.huskerdev:openglfx-lwjgl:4.1.1")
 
     implementation("org.lwjgl", "lwjgl")
